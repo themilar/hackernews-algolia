@@ -21,7 +21,7 @@ const list = [
   }
 ]
 
-const isSearched = searchTerm => item => item.title.toLowerCase().includes(searchTerm.toLowerCase())
+const isSearched = (searchTerm) => (item) => item.title.toLowerCase().includes(searchTerm.toLowerCase())
 
 class App extends Component {
 
@@ -44,12 +44,16 @@ class App extends Component {
   };
 
   render() {
+    let {list,searchTerm} = this.state
     return (
       <div className="App">
         <form>
-          <input type="text" onChange={this.onSearchChange} />
+          <input
+          type="text" 
+          onChange={this.onSearchChange}
+          value={searchTerm} />
         </form>
-        {this.state.list.filter(isSearched(this.state.searchTerm)).map(item => {
+        {list.filter(isSearched(searchTerm)).map(item => {
           return (
             <div key={item.objectID}>
               <span>
