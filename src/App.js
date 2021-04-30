@@ -1,25 +1,6 @@
 import './App.css';
 import React, { Component } from 'react'
 
-const list = [
-  {
-    title: "React",
-    url: "https://facebook.github.io/react/",
-    author: "Jordan Walks",
-    num_comments: "3",
-    points: "4",
-    objectID: "0",
-
-  },
-  {
-    title: "Redux",
-    url: "https://github.com/reactjs/redux",
-    author: "Dan Abramov, Andrew Clark",
-    num_comments: "2",
-    points: "5",
-    objectID: "1",
-  }
-]
 const largeColumn = { width: '40%', };
 const midColumn = { width: '30%', };
 const smallColumn = { width: '10%', };
@@ -32,11 +13,24 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list,
-      searchTerm: '',
+      searchTerm: DEFAULT_QUERY,
+      result: null,
     };
+    this.setSearchTopStories = this.setSearchTopStories.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+  }
+
+  setSearchTopStories(result) {
+    this.setState({ result })
+  }
+  componentDidMount() {
+    const { searchTerm } = this.state;
+    // const cache = caches.open('my-json')
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`, { cache: 'force-cache' })
+      .then(response => response.json())
+      .then(result => this.setSearchTopStories(result))
+      .catch(error => error)
   }
   onSearchChange(event) {
     this.setState({ searchTerm: event.target.value })
@@ -48,7 +42,8 @@ class App extends Component {
   };
 
   render() {
-    let { list, searchTerm } = this.state
+    let { result, searchTerm } = this.state
+    if (!result) return null;
     return (
       <div className="page">
         <div className="interactions">
@@ -59,7 +54,7 @@ class App extends Component {
         </Search>
         </div>
         <Table
-          list={list}
+          list={result.hits}
           pattern={searchTerm}
           onDismiss={this.onDismiss} />
 
@@ -106,4 +101,9 @@ const Button = ({ onClick, className, children }) =>
     {children}
   </button>
 
+const DEFAULT_QUERY = 'redux'
+const PATH_BASE = 'https://hn.algolia.com/api/v1/'
+const PATH_SEARCH = '/search'
+const PARAM_SEARCH = 'query='
+// const url = `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${DEFAULT_QUERY}`
 export default App;
