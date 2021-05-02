@@ -27,7 +27,7 @@ class App extends Component {
   componentDidMount() {
     const { searchTerm } = this.state;
     // const cache = caches.open('my-json')
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`, { cache: 'force-cache' })
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`, {cache:'force-cache'})
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
       .catch(error => error)
@@ -37,8 +37,8 @@ class App extends Component {
   };
   onDismiss(id) {
     const isNotId = item => item.objectID !== id;
-    const updatedList = this.state.list.filter(isNotId);
-    this.setState({ list: updatedList });
+    const updatedHits = this.state.result.hits.filter(isNotId)
+    this.setState({ result: {...this.state.result, hits: updatedHits} });
   };
 
   render() {
