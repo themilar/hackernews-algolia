@@ -24,6 +24,7 @@ class App extends Component {
       searchKey: '',
       searchTerm: DEFAULT_QUERY,
       error: null,
+      isLoading: false,
     };
     this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -38,6 +39,7 @@ class App extends Component {
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
+    this.setState({ isLoading: true })
     axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(result => this._isMounted && this.setSearchTopStories(result.data))
       .catch(error => this._isMounted && this.setState({ error }))
@@ -65,7 +67,8 @@ class App extends Component {
       results: {
         ...results,
         [searchKey]: { hits: updatedHits, page }
-      }
+      },
+      isLoading: false,
     })
   }
   componentDidMount() {
@@ -99,7 +102,8 @@ class App extends Component {
       searchTerm,
       results,
       searchKey,
-      error
+      error,
+      isLoading,
     } = this.state;
 
     const page = (
@@ -133,32 +137,46 @@ class App extends Component {
             onDismiss={this.onDismiss} />
         }
         <div className="interactions">
-          <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
-            More
-          </Button>
+          {isLoading
+            ? <Loading />
+            : <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
+              More
+          </Button>}
         </div>
       </div>
     )
   }
 }
 
-const Search = ({
-  value,
-  onChange,
-  onSubmit,
-  children
-}) =>
-  <form onSubmit={onSubmit}>
-    <input
-      type="text"
-      value={value}
-      onChange={onChange}
-    />
-    <button type="submit">
-      {children}
-    </button>
-  </form>
+const Loading = () => <div>Loading <i class="fas fa-spinner"></i></div>
 
+class Search extends Component {
+  componentDidMount() {
+    if (this.input) {
+      this.input.focus()
+    }
+  }
+  render() {
+    const {
+      value,
+      onChange,
+      onSubmit,
+      children
+    } = this.props;
+    return (
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          value={value}
+          onChange={onChange}
+          ref={(node) => { this.input = node }} />
+        <button type="submit">
+          {children}
+        </button>
+      </form>
+    );
+  }
+}
 const Table = ({ list, onDismiss }) =>
   <div className="table">
     {list.map(item =>
