@@ -1,6 +1,7 @@
 import './App.css';
 import React, { Component } from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 const largeColumn = { width: '40%', };
 const midColumn = { width: '30%', };
@@ -73,7 +74,7 @@ class App extends Component {
     this.setState({ searchKey: searchTerm })
     this.fetchSearchTopStories(searchTerm)
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     this._isMounted = false;
   }
   onSearchChange(event) {
@@ -186,6 +187,33 @@ const Button = ({ onClick, className, children }) =>
     type="button">
     {children}
   </button>
+
+Button.defaultProps = {
+  className: '',
+};
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
+Table.propTypes = {
+  list: PropTypes.arrayOf(
+    PropTypes.shape({
+      objectID: PropTypes.string.isRequired,
+      author: PropTypes.string,
+      url: PropTypes.string,
+      num_comments: PropTypes.number,
+      points: PropTypes.number
+    })
+  ).isRequired,
+  onDismiss: PropTypes.func.isRequired
+};
+Search.propTypes = {
+  children: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
 
 export default App;
 
