@@ -137,19 +137,21 @@ class App extends Component {
             onDismiss={this.onDismiss} />
         }
         <div className="interactions">
-          {isLoading
-            ? <Loading />
-            : <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
-              More
-          </Button>}
+          <ButtonWithLoading isLoading={isLoading} onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
+            More
+          </ButtonWithLoading>
         </div>
       </div>
     )
   }
 }
 
-const Loading = () => <div>Loading <i class="fas fa-spinner"></i></div>
+const Loading = () => <div>Loading <i className="fas fa-spinner"></i></div>
 
+const withLoading = Component => ({ isLoading, ...rest }) =>
+  isLoading
+    ? <Loading />
+    : <Component {...rest} />
 class Search extends Component {
   componentDidMount() {
     if (this.input) {
@@ -205,7 +207,7 @@ const Button = ({ onClick, className, children }) =>
     type="button">
     {children}
   </button>
-
+const ButtonWithLoading = withLoading(Button)
 Button.defaultProps = {
   className: '',
 };
