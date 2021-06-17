@@ -30,6 +30,7 @@ export default class Table extends Component {
               sortKey={"TITLE"}
               onSort={this.onSort}
               activeSortKey={sortKey}
+              isSortReverse={isSortReverse}
             >
               Title
             </Sort>
@@ -39,6 +40,7 @@ export default class Table extends Component {
               sortKey={"AUTHOR"}
               onSort={this.onSort}
               activeSortKey={sortKey}
+              isSortReverse={isSortReverse}
             >
               Author
             </Sort>
@@ -48,6 +50,7 @@ export default class Table extends Component {
               sortKey={"COMMENTS"}
               onSort={this.onSort}
               activeSortKey={sortKey}
+              isSortReverse={isSortReverse}
             >
               Comments
             </Sort>
@@ -57,6 +60,7 @@ export default class Table extends Component {
               sortKey={"POINTS"}
               onSort={this.onSort}
               activeSortKey={sortKey}
+              isSortReverse={isSortReverse}
             >
               Points
             </Sort>
@@ -85,3 +89,15 @@ export default class Table extends Component {
     );
   }
 }
+// const withReverse = (Component) => (props) =>
+//   props.isSortReverse ? (
+//     <>
+//       <i className="fas fa-angle-down"></i>
+//       <Component />
+//     </>
+//   ) : (
+//     <Component />
+//   );
+
+// const SortWithReverse = withReverse(Sort);
+// console.log(SortWithReverse);
