@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 import { SORTS, largeColumn, midColumn, smallColumn } from "../constants";
 import Sort from "./Sort";
-import Button from "./Button";
-
-export default class Table extends Component {
+import Item from "./Item";
+class Table extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +34,7 @@ export default class Table extends Component {
               Title
             </Sort>
           </span>
-          <span style={{ width: "30%" }}>
+          <span style={midColumn}>
             <Sort
               sortKey={"AUTHOR"}
               onSort={this.onSort}
@@ -45,7 +44,7 @@ export default class Table extends Component {
               Author
             </Sort>
           </span>
-          <span style={{ width: "10%" }}>
+          <span style={smallColumn}>
             <Sort
               sortKey={"COMMENTS"}
               onSort={this.onSort}
@@ -55,7 +54,7 @@ export default class Table extends Component {
               Comments
             </Sort>
           </span>
-          <span style={{ width: "10%" }}>
+          <span style={smallColumn}>
             <Sort
               sortKey={"POINTS"}
               onSort={this.onSort}
@@ -65,25 +64,10 @@ export default class Table extends Component {
               Points
             </Sort>
           </span>
-          <span style={{ width: "10%" }}>Archive</span>
+          <span style={smallColumn}>Archive</span>
         </div>
         {reverseSortedList.map((item) => (
-          <div key={item.objectID} className="table-row">
-            <span style={largeColumn}>
-              <a href={item.url}>{item.title}</a>
-            </span>
-            <span style={midColumn}>{item.author}</span>
-            <span style={smallColumn}>{item.num_comments}</span>
-            <span style={smallColumn}>{item.points}</span>
-            <span style={smallColumn}>
-              <Button
-                onClick={() => onDismiss(item.objectID)}
-                className="button-inline"
-              >
-                Dismiss
-              </Button>
-            </span>
-          </div>
+          <Item item={item} onDismiss={onDismiss} key={item.objectId} />
         ))}
       </div>
     );
@@ -101,3 +85,4 @@ export default class Table extends Component {
 
 // const SortWithReverse = withReverse(Sort);
 // console.log(SortWithReverse);
+export default memo(Table);
